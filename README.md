@@ -1,71 +1,45 @@
-# Diary — 日本語日記投稿サイト
+# Diary
 
-誰でも会員登録・ログインして日記を投稿・公開できるサービスです。  
-ホーム → ユーザー → ジャンル → 日付 という階層でドリルダウンして記事にたどり着く構造になっています。
+日本語日記投稿サイト。ユーザー登録してジャンル別に日記を書き、公開できます。
 
 ## 技術スタック
 
-| カテゴリ | 技術 |
-|---|---|
-| フレームワーク | Next.js 14（App Router） |
-| 言語 | TypeScript |
-| データベース | PostgreSQL |
-| ORM | Prisma |
-| 認証 | NextAuth.js |
-| スタイル | Tailwind CSS |
-| エディタ | TipTap |
-
-## URL構造
-
-### 公開ページ
-| URL | 説明 |
-|---|---|
-| `/` | ホーム（登録ユーザー一覧） |
-| `/[username]` | ユーザープロフィール＋ジャンル一覧 |
-| `/[username]/[genre]` | ジャンル別日記一覧 |
-| `/[username]/[genre]/[date]` | 日記詳細（date は `YYYY-MM-DD` 形式） |
-
-### 認証ページ
-| URL | 説明 |
-|---|---|
-| `/register` | 会員登録 |
-| `/login` | ログイン |
-
-### ログイン後ページ
-| URL | 説明 |
-|---|---|
-| `/diary/new` | 日記作成（TipTap エディタ、ログイン必須） |
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **PostgreSQL + Prisma**
+- **NextAuth.js** (Credentials Provider)
+- **Tailwind CSS**
+- **TipTap** (リッチテキストエディタ)
 
 ## セットアップ
 
-### 前提条件
-- Node.js 18+
-- PostgreSQL
-
-### インストール
+### 1. 依存パッケージのインストール
 
 ```bash
 npm install
 ```
 
-### 環境変数
+### 2. 環境変数の設定
 
-`.env` を作成して以下を設定してください。
+`.env.example` をコピーして `.env` を作成し、各値を設定します。
 
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/diary"
-NEXTAUTH_SECRET="your-secret"
-NEXTAUTH_URL="http://localhost:3000"
+```bash
+cp .env.example .env
 ```
 
-### DB のセットアップ
+```env
+DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/diary
+NEXTAUTH_SECRET=your-secret-here
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### 3. データベースのセットアップ
 
 ```bash
 npx prisma migrate dev
-npx prisma generate
 ```
 
-### 開発サーバー起動
+### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
@@ -73,20 +47,25 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000) で確認できます。
 
-## ディレクトリ構成
+## URL 構造
 
-```
-src/
-  app/
-    (auth)/
-      login/
-      register/
-    [username]/
-      [genre]/
-        [date]/
-    diary/
-      new/
-  components/
-  lib/
-  prisma/
+| パス | 内容 |
+|------|------|
+| `/` | ホーム（ユーザー一覧） |
+| `/register` | 会員登録 |
+| `/login` | ログイン |
+| `/[username]` | ユーザープロフィール・ジャンル一覧 |
+| `/[username]/[genre]` | ジャンル別日記一覧 |
+| `/[username]/[genre]/[date]` | 日記詳細（日付は YYYY-MM-DD 形式） |
+| `/diary/new` | 日記作成（要ログイン） |
+| `/settings` | アカウント設定（要ログイン） |
+| `/privacy` | プライバシーポリシー |
+
+## よく使うコマンド
+
+```bash
+npm run dev              # 開発サーバー起動
+npx prisma migrate dev   # マイグレーション実行
+npx prisma studio        # DB GUI
+npx prisma generate      # クライアント再生成
 ```
