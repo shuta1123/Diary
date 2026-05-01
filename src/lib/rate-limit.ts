@@ -2,6 +2,13 @@ type Entry = { count: number; resetAt: number }
 
 const store = new Map<string, Entry>()
 
+setInterval(() => {
+  const now = Date.now()
+  store.forEach((entry, key) => {
+    if (now >= entry.resetAt) store.delete(key)
+  })
+}, 5 * 60 * 1000).unref()
+
 export function checkRateLimit(key: string, limit: number, windowMs: number): boolean {
   const now = Date.now()
   const entry = store.get(key)

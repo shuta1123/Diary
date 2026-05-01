@@ -18,6 +18,7 @@ export default async function GenrePage({ params }: { params: { username: string
 
   const diaries = await prisma.diary.findMany({
     where: { authorId: user.id, genre },
+    select: { id: true, title: true, date: true },
     orderBy: { date: 'desc' },
   })
 
