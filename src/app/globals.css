@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#faf7f2] text-stone-900 antialiased;
+    font-feature-settings: "palt";
+  }
+
+  .font-serif {
+    font-family: 'Georgia', 'Times New Roman', serif;
+  }
+}
+
+/* TipTap prose styles */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply text-stone-300 pointer-events-none float-left h-0;
+}
