@@ -4,11 +4,16 @@ import { Prisma } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { parseDiaryInput } from '@/lib/diary'
 import { prisma } from '@/lib/prisma'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 })
+  }
+
+  if (!checkRateLimit(`diary:${session.user.id}`, 30, 60 * 60_000)) {
+    return NextResponse.json({ error: 'しばらく待ってから再試行してください' }, { status: 429 })
   }
 
   let payload: unknown

@@ -7,8 +7,19 @@ import Breadcrumb from '@/components/Breadcrumb'
 import DiaryActions from '@/components/DiaryActions'
 
 export async function generateMetadata({ params }: { params: { username: string; genre: string; date: string } }) {
-  const genre = decodePathSegment(params.genre) ?? '日記'
-  return { title: `${params.username} / ${genre} / ${params.date}` }
+  const genre = decodePathSegment(params.genre)
+  const from = parseDatePath(params.date)
+  if (!genre || !from) return { title: '日記' }
+
+  const user = await prisma.user.findUnique({ where: { username: params.username }, select: { id: true } })
+  if (!user) return { title: '日記' }
+
+  const diary = await prisma.diary.findUnique({
+    where: { authorId_genre_date: { authorId: user.id, genre, date: from } },
+    select: { title: true },
+  })
+
+  return { title: diary?.title ?? `${params.username} / ${genre}` }
 }
 
 export default async function DiaryPage({ params }: { params: { username: string; genre: string; date: string } }) {
