@@ -36,7 +36,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   try {
-    const updated = await prisma.diary.update({
+    await prisma.diary.update({
       where: { id: params.id },
       data: {
         title: parsed.data.title,
@@ -52,7 +52,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     if (diary.genre !== parsed.data.genre) {
       revalidatePath(`/${username}/${encodeURIComponent(parsed.data.genre)}`)
     }
-    return NextResponse.json({ ...updated, datePath: parsed.data.datePath })
+    return NextResponse.json({ genre: parsed.data.genre, datePath: parsed.data.datePath })
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

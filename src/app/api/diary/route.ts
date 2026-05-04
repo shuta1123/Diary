@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const diary = await prisma.diary.create({
+    await prisma.diary.create({
       data: {
         title: parsed.data.title,
         content: parsed.data.content,
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     revalidatePath(`/${session.user.username}`)
     revalidatePath(`/${session.user.username}/${encodeURIComponent(parsed.data.genre)}`)
     return NextResponse.json(
-      { ...diary, datePath: parsed.data.datePath },
+      { genre: parsed.data.genre, datePath: parsed.data.datePath },
       { status: 201 }
     )
   } catch (error) {
