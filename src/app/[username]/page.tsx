@@ -10,16 +10,18 @@ export async function generateMetadata({ params }: { params: { username: string 
 export default async function UserPage({ params }: { params: { username: string } }) {
   const user = await prisma.user.findUnique({
     where: { username: params.username },
-    select: {
-      username: true,
-      bio: true,
-      diaries: { select: { genre: true } },
-    },
+    select: { id: true, username: true, bio: true },
   })
 
   if (!user) notFound()
 
-  const genres = Array.from(new Set(user.diaries.map((d: { genre: string }) => d.genre)))
+  const genreRows = await prisma.diary.findMany({
+    where: { authorId: user.id },
+    select: { genre: true },
+    distinct: ['genre'],
+    orderBy: { genre: 'asc' },
+  })
+  const genres = genreRows.map((r) => r.genre)
 
   return (
     <div>

@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const MAX_BIO_LENGTH = 200
 
@@ -9,6 +11,10 @@ export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 })
+  }
+
+  if (!checkRateLimit(`bio:${session.user.id}`, 10, 60_000)) {
+    return NextResponse.json({ error: 'しばらく待ってから再試行してください' }, { status: 429 })
   }
 
   let payload: unknown
@@ -36,6 +42,7 @@ export async function PATCH(req: Request) {
     data: { bio: bio || null },
   })
 
+  revalidatePath(`/${session.user.username}`)
   return NextResponse.json({ ok: true })
 }
 
