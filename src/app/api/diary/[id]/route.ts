@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { Prisma } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
@@ -42,6 +43,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       },
     })
 
+    const username = session.user.username
+    revalidatePath(`/${username}`)
+    revalidatePath(`/${username}/${encodeURIComponent(diary.genre)}`)
+    if (diary.genre !== parsed.data.genre) {
+      revalidatePath(`/${username}/${encodeURIComponent(parsed.data.genre)}`)
+    }
     return NextResponse.json({ ...updated, datePath: parsed.data.datePath })
   } catch (error) {
     if (
@@ -72,5 +79,8 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
   }
 
   await prisma.diary.delete({ where: { id: params.id } })
+  const username = session.user.username
+  revalidatePath(`/${username}`)
+  revalidatePath(`/${username}/${encodeURIComponent(diary.genre)}`)
   return NextResponse.json({ ok: true })
 }

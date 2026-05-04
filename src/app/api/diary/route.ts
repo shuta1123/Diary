@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { Prisma } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
@@ -39,6 +40,8 @@ export async function POST(req: Request) {
       },
     })
 
+    revalidatePath(`/${session.user.username}`)
+    revalidatePath(`/${session.user.username}/${encodeURIComponent(parsed.data.genre)}`)
     return NextResponse.json(
       { ...diary, datePath: parsed.data.datePath },
       { status: 201 }
