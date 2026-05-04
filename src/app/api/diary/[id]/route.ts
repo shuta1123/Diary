@@ -12,7 +12,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 })
   }
 
-  const diary = await prisma.diary.findUnique({ where: { id: params.id } })
+  const diary = await prisma.diary.findUnique({
+    where: { id: params.id },
+    select: { authorId: true, genre: true },
+  })
   if (!diary) {
     return NextResponse.json({ error: '日記が見つかりません' }, { status: 404 })
   }
@@ -70,7 +73,10 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 })
   }
 
-  const diary = await prisma.diary.findUnique({ where: { id: params.id } })
+  const diary = await prisma.diary.findUnique({
+    where: { id: params.id },
+    select: { authorId: true, genre: true },
+  })
   if (!diary) {
     return NextResponse.json({ error: '日記が見つかりません' }, { status: 404 })
   }

@@ -26,6 +26,7 @@ export async function POST(req: Request) {
 
   const exists = await prisma.user.findFirst({
     where: { OR: [{ email }, { username }] },
+    select: { id: true },
   })
   if (exists) {
     return NextResponse.json({ error: 'そのメールアドレスまたはユーザー名は既に使われています' }, { status: 400 })
