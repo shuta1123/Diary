@@ -4,7 +4,7 @@ type Crumb = { label: string; href?: string }
 
 export default function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   return (
-    <nav className="flex items-center gap-1.5 text-sm text-stone-400 mb-8">
+    <nav aria-label="パンくずリスト" className="flex items-center gap-1.5 text-sm text-stone-400 mb-8">
       {crumbs.map((crumb, i) => (
         <span key={i} className="flex items-center gap-1.5">
           {i > 0 && <span>/</span>}

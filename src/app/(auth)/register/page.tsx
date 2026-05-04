@@ -91,7 +91,7 @@ export default function RegisterPage() {
               className="mt-0.5 accent-amber-700"
             />
             <span className="text-sm text-stone-600">
-              <Link href="/privacy" target="_blank" className="text-amber-700 hover:underline">
+              <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="text-amber-700 hover:underline">
                 プライバシーポリシー
               </Link>
               を読み、同意します
