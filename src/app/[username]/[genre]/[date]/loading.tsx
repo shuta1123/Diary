@@ -7,11 +7,11 @@ export default function Loading() {
       </div>
       <div className="h-9 w-2/3 bg-stone-100 rounded-lg animate-pulse mb-8" />
       <div className="space-y-3">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {[100, 85, 95, 78, 100, 90, 72, 88].map((w, i) => (
           <div
             key={i}
             className="h-4 bg-stone-100 rounded animate-pulse"
-            style={{ width: `${70 + Math.random() * 30}%` }}
+            style={{ width: `${w}%` }}
           />
         ))}
       </div>
