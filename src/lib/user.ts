@@ -4,7 +4,7 @@ const MIN_PASSWORD_LENGTH = 8
 const MAX_PASSWORD_LENGTH = 128
 const RESERVED_USERNAMES = new Set([
   'api', 'login', 'logout', 'register', 'diary', 'admin', 'settings',
-  'profile', 'me', 'about', 'help', 'static', 'public', 'favicon',
+  'profile', 'me', 'about', 'help', 'static', 'public', 'favicon', 'privacy',
 ])
 
 export type RegisterInput = {
